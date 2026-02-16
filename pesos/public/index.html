@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertidor de Pesos a Dólares</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1> Convertidor de Pesos a Dólares </h1>
+        
+        <div class="info-box">
+            <p>Tipo de cambio del día: <span class="highlight">$17.16 MXN = $1 USD</span></p>
+        </div>
+
+        <div class="input-section">
+            <h2>Ingresa la cantidad en pesos mexicanos:</h2>
+            
+            <div class="input-group">
+                <label for="pesos"> 💰 Pesos Mexicanos (MXN):</label>
+                <input type="number" id="pesos" class="cantidad" min="0" max="1000000" step="0.01" placeholder="Ejemplo: 1000">
+            </div>
+            
+            <button onclick="convertirDivisa()">Convertir a Dólares 💵</button>
+            <button onclick="limpiarCampos()" class="btn-secundario">Limpiar 🧹</button>
+        </div>
+
+        <div id="resultado" class="result-section" style="display: none;">
+            <h2>🪙 RESULTADO DE LA CONVERSIÓN 🪙 </h2>
+            
+            <div class="result-grid">
+                <div class="result-item">
+                    <span class="result-label">🇲🇽 Pesos (MXN):</span>
+                    <span id="res-pesos" class="result-value"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">💵 Dólares (USD):</span>
+                    <span id="res-dolares" class="result-value"></span>
+                </div>
+                <div class="result-item total">
+                    <span class="result-label">Tipo de cambio usado:</span>
+                    <span id="tipo-cambio" class="result-value">17.16</span>
+                </div>
+            </div>
+
+            <div id="estatus" class="estatus-box">
+                <!-- El mensaje de conversión se mostrará aquí -->
+            </div>
+        </div>
+
+        <div id="error" class="error-message" style="display: none;">
+            <!-- Mensajes de error -->
+        </div>
+    </div>
+
+    <script>
+        const TIPO_CAMBIO = 17.16; // Tipo de cambio fijo
+
+        function validarCantidad(valor) {
+            return !isNaN(valor) && valor >= 0 && valor <= 1000000;
+        }
+
+        function mostrarError(mensaje) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = mensaje;
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function convertirDivisa() {
+            // Obtener valor en pesos
+            const pesos = parseFloat(document.getElementById('pesos').value);
+            
+            // Validar que se haya ingresado un valor
+            if (isNaN(pesos)) {
+                mostrarError('❌ Por favor, ingresa una cantidad en pesos');
+                return;
+            }
+            
+            // Validar rango de la cantidad
+            if (!validarCantidad(pesos)) {
+                mostrarError('❌ La cantidad debe estar entre 0 y 1,000,000 pesos');
+                return;
+            }
+            
+            // Realizar la conversión
+            const dolares = pesos / TIPO_CAMBIO;
+            
+            // Mostrar resultados
+            document.getElementById('res-pesos').textContent = '$' + pesos.toFixed(2) + ' MXN';
+            document.getElementById('res-dolares').textContent = '$' + dolares.toFixed(2) + ' USD';
+            document.getElementById('tipo-cambio').textContent = TIPO_CAMBIO;
+                        
+            // Mostrar sección de resultados
+            document.getElementById('resultado').style.display = 'block';
+        }
+
+        function limpiarCampos() {
+            document.getElementById('pesos').value = '';
+            document.getElementById('resultado').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+        }
+
+        // Permitir calcular con la tecla Enter
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                convertirDivisa();
+            }
+        });
+
+        // Validación en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('pesos');
+            input.addEventListener('input', function() {
+                let valor = parseFloat(this.value);
+                if (this.value !== '') {
+                    if (valor > 1000000) this.value = 1000000;
+                    if (valor < 0) this.value = 0;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

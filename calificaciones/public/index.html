@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Calificaciones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #444;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .info-box {
+            background-color: #f0f4ff;
+            border-left: 5px solid #667eea;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-group input::placeholder {
+            color: #aaa;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-right: 10px;
+            font-weight: 500;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secundario {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .result-section {
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .result-item {
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-item.total {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .result-item.total .result-label,
+        .result-item.total .result-value {
+            color: white;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #555;
+            margin-right: 10px;
+        }
+
+        .result-value {
+            font-weight: 500;
+            color: #333;
+            float: right;
+        }
+
+        .estatus-box {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .estatus-box.aprobado {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .estatus-box.exento {
+            background-color: #cce5ff;
+            color: #004085;
+            border: 2px solid #b8daff;
+        }
+
+        .estatus-box.reprobado {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            border: 2px solid #f5c6cb;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-item.total {
+                grid-column: span 1;
+            }
+            
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 CALCULADORA DE CALIFICACIONES 📚</h1>
+        
+        <div class="info-box">
+            <p>Nota mínima aprobatoria: <span class="highlight">7.0</span></p>
+        </div>
+
+        <div class="input-section">
+            <h2>Ingresa las calificaciones de las 3 unidades:</h2>
+            
+            <div class="input-group">
+                <label for="unidad1">Unidad 1:</label>
+                <input type="number" id="unidad1" class="calificacion" min="0" max="10" step="0.1" placeholder="0-10">
+            </div>
+
+            <div class="input-group">
+                <label for="unidad2">Unidad 2:</label>
+                <input type="number" id="unidad2" class="calificacion" min="0" max="10" step="0.1" placeholder="0-10">
+            </div>
+
+            <div class="input-group">
+                <label for="unidad3">Unidad 3:</label>
+                <input type="number" id="unidad3" class="calificacion" min="0" max="10" step="0.1" placeholder="0-10">
+            </div>
+
+            <button onclick="calcularCalificacion()">Calcular 📊</button>
+            <button onclick="limpiarCampos()" class="btn-secundario">Limpiar 🧹</button>
+        </div>
+
+        <div id="resultado" class="result-section" style="display: none;">
+            <h2>📊 RESULTADOS 📊</h2>
+            
+            <div class="result-grid">
+                <div class="result-item">
+                    <span class="result-label">Unidad 1:</span>
+                    <span id="res-unidad1" class="result-value"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Unidad 2:</span>
+                    <span id="res-unidad2" class="result-value"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Unidad 3:</span>
+                    <span id="res-unidad3" class="result-value"></span>
+                </div>
+                <div class="result-item total">
+                    <span class="result-label">Promedio final:</span>
+                    <span id="promedio" class="result-value"></span>
+                </div>
+            </div>
+
+            <div id="estatus" class="estatus-box">
+                <!-- El estatus se mostrará aquí -->
+            </div>
+        </div>
+
+        <div id="error" class="error-message" style="display: none;">
+            <!-- Mensajes de error -->
+        </div>
+    </div>
+
+    <script>
+        function validarCalificacion(valor) {
+            return !isNaN(valor) && valor >= 0 && valor <= 10;
+        }
+
+        function mostrarError(mensaje) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = mensaje;
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function calcularCalificacion() {
+            // Obtener valores
+            const unidad1 = parseFloat(document.getElementById('unidad1').value);
+            const unidad2 = parseFloat(document.getElementById('unidad2').value);
+            const unidad3 = parseFloat(document.getElementById('unidad3').value);
+            
+            // Validar que todos los campos tengan valores
+            if (isNaN(unidad1) || isNaN(unidad2) || isNaN(unidad3)) {
+                mostrarError('❌ Por favor, ingresa todas las calificaciones');
+                return;
+            }
+            
+            // Validar rango de calificaciones
+            if (!validarCalificacion(unidad1) || !validarCalificacion(unidad2) || !validarCalificacion(unidad3)) {
+                mostrarError('❌ Las calificaciones deben estar entre 0 y 10');
+                return;
+            }
+            
+            // Calcular promedio
+            const promedio = (unidad1 + unidad2 + unidad3) / 3;
+            
+            // Mostrar resultados
+            document.getElementById('res-unidad1').textContent = unidad1.toFixed(2);
+            document.getElementById('res-unidad2').textContent = unidad2.toFixed(2);
+            document.getElementById('res-unidad3').textContent = unidad3.toFixed(2);
+            document.getElementById('promedio').textContent = promedio.toFixed(2);
+            
+            // Determinar estatus
+            const estatusDiv = document.getElementById('estatus');
+            estatusDiv.className = 'estatus-box';
+            
+            if (promedio >= 7) {
+                if (promedio >= 8.5) {
+                    estatusDiv.className += ' exento';
+                    estatusDiv.innerHTML = '✅ ¡FELICIDADES! ESTÁS EXENTO';
+                } else {
+                    estatusDiv.className += ' aprobado';
+                    estatusDiv.innerHTML = '✅ APROBADO (pero no exento)';
+                }
+            } else {
+                estatusDiv.className += ' reprobado';
+                estatusDiv.innerHTML = '❌ REPROBADO';
+            }
+            
+            // Mostrar sección de resultados
+            document.getElementById('resultado').style.display = 'block';
+        }
+
+        function limpiarCampos() {
+            document.getElementById('unidad1').value = '';
+            document.getElementById('unidad2').value = '';
+            document.getElementById('unidad3').value = '';
+            document.getElementById('resultado').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+        }
+
+        // Permitir calcular con la tecla Enter
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calcularCalificacion();
+            }
+        });
+
+        // Validación en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.calificacion');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    let valor = parseFloat(this.value);
+                    if (this.value !== '') {
+                        if (valor > 10) this.value = 10;
+                        if (valor < 0) this.value = 0;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
