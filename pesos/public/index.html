@@ -24,7 +24,16 @@
             
             <button onclick="convertirDivisa()">Convertir a Dólares 💵</button>
             <button onclick="limpiarCampos()" class="btn-secundario">Limpiar 🧹</button>
+            <!-- Agrega esto justo después de abrir el container en cada programa -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <a href="../../index.html" 
+                   style="display: inline-flex; align-items: center; gap: 5px; background: #f0f0f0; color: #667eea; text-decoration: none; padding: 8px 15px; border-radius: 8px; font-weight: 500; transition: all 0.3s ease;">
+                    <span style="font-size: 1.2em;">←</span> Volver
+                </a>
+                <span style="color: #999; font-size: 0.9em;">Conjunto de Programas</span>
+            </div>
         </div>
+        
 
         <div id="resultado" class="result-section" style="display: none;">
             <h2>🪙 RESULTADO DE LA CONVERSIÓN 🪙 </h2>
@@ -125,4 +134,5 @@
         });
     </script>
 </body>
+
 </html>
